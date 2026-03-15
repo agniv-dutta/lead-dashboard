@@ -23,9 +23,9 @@ export default function LeadTrendChart() {
   });
 
   const labels = Object.keys(trendData).sort(); // Depending on format we might need sorting
-  const hotData = labels.map(l => trendData[l].Hot || 0);
-  const warmData = labels.map(l => trendData[l].Warm || 0);
-  const coldData = labels.map(l => trendData[l].Cold || 0);
+  const hotData = labels.map(l => trendData[l]?.Hot || 0);
+  const warmData = labels.map(l => trendData[l]?.Warm || 0);
+  const coldData = labels.map(l => trendData[l]?.Cold || 0);
 
   const data = {
     labels,

@@ -21,7 +21,7 @@ export default function Sidebar({ isOpen, toggle }) {
             <li key={model} className="sidebar-item">
               <span className={`model-dot model-${model.split(' ')[0].toLowerCase()}`}></span>
               <span className="item-label">{model}</span>
-              {models[model] > 0 && <span className="badge">{models[model]}</span>}
+              {models?.[model] > 0 && <span className="badge">{models[model]}</span>}
             </li>
           ))}
         </ul>
@@ -34,7 +34,7 @@ export default function Sidebar({ isOpen, toggle }) {
             <li key={stage} className="sidebar-item">
               <span className={`model-dot stage-dot`}></span>
               <span className="item-label">{stage.replace('02 ', '')}</span>
-              {funnel[stage] > 0 && <span className="badge">{funnel[stage]}</span>}
+              {funnel?.[stage] > 0 && <span className="badge">{funnel[stage]}</span>}
             </li>
           ))}
         </ul>

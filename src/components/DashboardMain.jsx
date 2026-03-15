@@ -7,7 +7,6 @@ import StageHealth from './StageHealth';
 import PincodePerformance from './PincodePerformance';
 import RecentLeads from './RecentLeads';
 import LeadVelocity from './LeadVelocity';
-import LiveCallMap from './LiveCallMap';
 
 // Custom hook for the 900-1100ms count-up requested in the brief
 function useCountUp(endVal, duration = 1000) {
@@ -85,9 +84,6 @@ export default function DashboardMain() {
           </div>
         </div>
       </div>
-
-      {/* Row 5: Live Geospatial Map */}
-      <LiveCallMap />
     </div>
   );
 }

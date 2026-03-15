@@ -7,6 +7,9 @@ export default function PincodePerformance() {
     queryFn: () => fetch('/api/leads/pincodes').then(r => r.json())
   });
 
+  const topRows = Array.isArray(data?.top) ? data.top : [];
+  const bottomRows = Array.isArray(data?.bottom) ? data.bottom : [];
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div className="card-heading" style={{ marginBottom: '16px' }}>Pincode Performance</div>
@@ -17,7 +20,7 @@ export default function PincodePerformance() {
         <div>
           <div className="label-uppercase" style={{ marginBottom: '12px' }}>Best Performing (Hot Leads)</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {data.top.map(p => (
+            {topRows.map(p => (
               <PincodeRow key={p.pin} pin={p.pin} count={p.hot} total={p.total} color="var(--green-secondary)" />
             ))}
           </div>
@@ -29,7 +32,7 @@ export default function PincodePerformance() {
         <div>
           <div className="label-uppercase" style={{ marginBottom: '12px' }}>Needs Attention (Cold Ratio)</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {data.bottom.map(p => (
+            {bottomRows.map(p => (
               <PincodeRow key={p.pin} pin={p.pin} count={p.cold} total={p.total} color="var(--orange-primary)" />
             ))}
           </div>
