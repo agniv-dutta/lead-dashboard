@@ -1,53 +1,44 @@
-export default function Sidebar({
-  collapsed = false,
-  onToggleCollapse,
-  onLogout
-}) {
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+
+export default function Sidebar({ isOpen, toggle }) {
+  const { data: models = {} } = useQuery({
+    queryKey: ['models'],
+    queryFn: () => fetch('/api/leads/models').then(r => r.json())
+  });
+
+  const { data: funnel = {} } = useQuery({
+    queryKey: ['funnel'],
+    queryFn: () => fetch('/api/leads/funnel').then(r => r.json())
+  });
 
   return (
-    <>
-      {/* Trigger button for sidebar */}
-      <button
-        className="sidebar-trigger"
-        onClick={onToggleCollapse}
-        aria-label="Toggle sidebar"
-      >
-        <span className="sidebar-trigger-icon">☰</span>
-      </button>
-      
-      <aside 
-        className={`sidebar ${!collapsed ? "visible" : ""} ${collapsed ? "collapsed" : ""}`}
-      >
-        <div className="sidebar-card">
-          <div className="sidebar-header">
-            <div className="sidebar-avatar">TM</div>
-            {!collapsed && (
-              <div className="sidebar-user-details">
-                <span className="sidebar-user-name">Tata Motors</span>
-                <span className="sidebar-user-email">Lead Ops Desk</span>
-              </div>
-            )}
-          </div>
+    <aside className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
+      <div className="sidebar-section">
+        <div className="sidebar-label">MODELS</div>
+        <ul className="sidebar-list">
+          {['Punch', 'Nexon', 'Harrier', 'Safari', 'Tiago', 'Curvv', 'Altroz', 'Tiago EV', 'Nexon EV', 'Tigor EV'].map(model => (
+            <li key={model} className="sidebar-item">
+              <span className={`model-dot model-${model.split(' ')[0].toLowerCase()}`}></span>
+              <span className="item-label">{model}</span>
+              {models[model] > 0 && <span className="badge">{models[model]}</span>}
+            </li>
+          ))}
+        </ul>
+      </div>
 
-          <div className="sidebar-actions">
-            <button
-              className="btn muted logout-btn"
-              type="button"
-              onClick={onLogout}
-            >
-              Log out
-            </button>
-            <button
-              className="btn subtle"
-              type="button"
-              onClick={onToggleCollapse}
-              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {collapsed ? "→" : "←"} {collapsed ? "Open" : "Collapse"}
-            </button>
-          </div>
-        </div>
-      </aside>
-    </>
+      <div className="sidebar-section">
+        <div className="sidebar-label">STAGE</div>
+        <ul className="sidebar-list">
+          {['02 Open Green Form', 'Booking Done', 'Test Drive', 'Retailed'].map(stage => (
+            <li key={stage} className="sidebar-item">
+              <span className={`model-dot stage-dot`}></span>
+              <span className="item-label">{stage.replace('02 ', '')}</span>
+              {funnel[stage] > 0 && <span className="badge">{funnel[stage]}</span>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </aside>
   );
 }
