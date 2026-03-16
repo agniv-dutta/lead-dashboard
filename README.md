@@ -1,8 +1,15 @@
 # Lead Dashboard
 
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Vercel Functions](https://img.shields.io/badge/Vercel-Serverless%20API-000000?style=for-the-badge&logo=vercel&logoColor=white)
+![React](https://img.shields.io/badge/React-18+-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/Vite-7+-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Leaflet](https://img.shields.io/badge/Leaflet-Maps-199900?style=for-the-badge&logo=leaflet&logoColor=white)
+![React Query](https://img.shields.io/badge/TanStack-React%20Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white)
+
 A React and Vite dashboard for exploring Tata Motors lead data from a CSV file. The application is built for sales operations analysis: lead-quality monitoring, conversion visibility, model-level drilldowns, pincode intelligence, and stage progression tracking.
 
-The current implementation is fully frontend-driven. Data is fetched from a static CSV in the public folder, parsed in the browser, and transformed into charts, summary cards, alerts, and tables without a backend dependency.
+The current implementation uses a hybrid architecture: the frontend renders analytics and maps, while Vercel Serverless API routes under api/leads read and aggregate data from public/model_analysis.csv for production-safe deployment.
 
 ## Overview
 
@@ -61,11 +68,19 @@ The app also includes a demo authentication screen and a persistent light/dark t
 
 ## Tech Stack
 
-- React 18
-- Vite 7
-- Papa Parse for CSV parsing
-- Leaflet for map rendering
-- ESLint for linting and code quality
+- Frontend: React 18, React DOM 18, Vite 7
+- Data fetching/cache: TanStack React Query
+- Mapping: Leaflet + React Leaflet
+- Charting: Chart.js + react-chartjs-2
+- CSV ingestion/parsing: Papa Parse
+- Backend (local/dev): Express 5
+- Backend (production): Vercel Serverless Functions (api/leads/*)
+- Runtime/Tooling: Node.js 18+, npm
+- Quality: ESLint
+
+## README Badges
+
+The icons/labels like "Python", "FastAPI", "React", and "Vite" at the top of a README are called badges (often generated with Shields).
 
 ## Getting Started
 
@@ -204,6 +219,18 @@ The dashboard is not only displaying raw data. Several visuals derive higher-lev
 
 ```text
 lead-dashboard/
+|-- api/
+|   |-- _lib/
+|   |   `-- leadsData.js
+|   `-- leads/
+|       |-- alerts.js
+|       |-- funnel.js
+|       |-- models.js
+|       |-- pincodes.js
+|       |-- recent.js
+|       |-- summary.js
+|       |-- trend.js
+|       `-- velocity.js
 |-- public/
 |   `-- model_analysis.csv
 |-- src/
