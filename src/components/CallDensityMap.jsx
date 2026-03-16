@@ -194,6 +194,11 @@ export default function CallDensityMap({ rows = [] }) {
     };
   }, [rows]);
 
+  const pulseStates = useMemo(
+    () => new Set([...stateStats].sort((a, b) => b.total - a.total).slice(0, 8).map(item => item.state)),
+    [stateStats]
+  );
+
   // Detect when component becomes visible
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -333,7 +338,7 @@ export default function CallDensityMap({ rows = [] }) {
     layerRef.current.clearLayers();
     if (!maxTotal) return;
 
-    stateStats.forEach(item => {
+    stateStats.forEach((item, idx) => {
       const coords = STATE_COORDS[item.state];
       if (!coords) return;
       const radius = 6 + (item.total / maxTotal) * 18;
@@ -344,7 +349,8 @@ export default function CallDensityMap({ rows = [] }) {
         color,
         fillColor: color,
         fillOpacity: 0.85,
-        weight: 1
+        weight: 1,
+        className: "map-live-circle"
       });
 
       circle.bindTooltip(
@@ -353,15 +359,30 @@ export default function CallDensityMap({ rows = [] }) {
       );
 
       circle.addTo(layerRef.current);
+
+      if (pulseStates.has(item.state)) {
+        const pulse = L.marker([coords.lat, coords.lng], {
+          icon: L.divIcon({
+            className: "map-pulse-wrapper",
+            html: `<span class="map-pulse-ring" style="animation-delay:${(idx % 6) * 0.2}s"></span><span class="map-pulse-core"></span>`,
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+          }),
+          interactive: false,
+          zIndexOffset: 1000
+        });
+
+        pulse.addTo(layerRef.current);
+      }
     });
-  }, [stateStats, maxTotal]);
+  }, [stateStats, maxTotal, pulseStates]);
 
   return (
     <div className="chart-card map-card">
       <div className="map-card-header">
         <div>
           <h3>Call Density Map</h3>
-          <p className="muted">Real basemap with call bubbles sized by volume, colored by hot ratio</p>
+          <p className="muted">Real basemap with call bubbles sized by volume, colored by hot ratio, and live pulse markers on top states.</p>
         </div>
         <div className="map-legend">
           <span className="legend-dot legend-hot" /> Hotter
